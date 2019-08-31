@@ -17,7 +17,11 @@ namespace ResidentJinn
         //-100 = Sad , 0 = Bored , 100 = Happy
         [Range(-100, 100)]
         public float Mood;
+        [Range(0, 100)]
         public float Fear, MaxFear;
+        public float UsingObject = 0;
+        public int CurrentObject = -1;
+        public bool Walking = false;
         public Vector3 destination;
         [HideInInspector] public NavMeshAgent agent;
         [HideInInspector] public AudioSource audioSource;
@@ -39,7 +43,7 @@ namespace ResidentJinn
         {
             if (Health <= 0)
                 return;
-            CurrentSpeed = Speed + (Fear > 50 ? 20 : 0);
+            CurrentSpeed = Speed + (Fear > 50 ? 10 : 0);
             agent.speed = CurrentSpeed;
 
             //Behaviour
@@ -53,16 +57,70 @@ namespace ResidentJinn
         public void NavGoto(Vector3 Pos)
         {
             Pos.y = transform.localPosition.y;
+            destination = Pos;
             agent.SetDestination(Pos);
         }
         private void WolfUpdate()
         {
-            NavGoto(GameManager.Jinn.transform.localPosition);
+            //NavGoto(GameManager.Jinn.transform.localPosition);
         }
 
         private void ManUpdate()
         {
-            NavGoto(GameManager.Jinn.transform.localPosition);
+            //NavGoto(GameManager.Jinn.transform.localPosition);
+
+
+            if (Fear >= MaxFear)
+            {
+                GameManager.GameOver(true);
+                return;
+            }
+
+            Fear -= Time.deltaTime * 0.1f;
+            Mood -= Time.deltaTime * 0.25f;
+            if (Fear < 0)
+                Fear = 0;
+            if (Mood < -100)
+                Mood = -100;
+
+            if (UsingObject > 0)
+            {
+                UsingObject -= Time.deltaTime;
+                return;
+            }
+            
+            if (CurrentObject == -1)
+            {
+                //Find something to do
+                List<int> possibilities = new List<int>();
+                for (int i = 0; i < GameManager.HouseObjects.Count; i++)
+                {
+                    if (GameManager.HouseObjects[i].CurrentCD <= 0)
+                        if (GameManager.HouseObjects[i].ConditionFearMax >= Fear && GameManager.HouseObjects[i].ConditionFearMin <= Fear
+                           && GameManager.HouseObjects[i].ConditionMoodMax >= Mood && GameManager.HouseObjects[i].ConditionMoodMin <= Mood)
+                        {
+                            possibilities.Add(i);
+                        }
+                }
+
+                if (possibilities.Count > 0)
+                {
+                    CurrentObject = possibilities[UnityEngine.Random.Range(0, possibilities.Count)];
+                    NavGoto(GameManager.HouseObjects[CurrentObject].transform.localPosition);
+                    Walking = true;
+                }
+            }
+            else if (Vector3.Distance(destination, transform.localPosition) <= 3)
+            {
+                Debug.Log("OK!");
+                destination = transform.localPosition;
+                GameManager.HouseObjects[CurrentObject].UseObject(this);
+
+                CurrentObject = -1;
+                Walking = false;
+            }
+
+
         }
 
         private void JinnUpdate()

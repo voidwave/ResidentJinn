@@ -9,7 +9,7 @@ namespace ResidentJinn
     {
         public List<UnitType> CanUse;
         public float CoolDown, UseTime;
-        private float CurrentCD = 0;
+        public float CurrentCD = 0;
 
         [Range(-100, 100)]
         public float ConditionMoodMin, ConditionMoodMax;
@@ -26,9 +26,14 @@ namespace ResidentJinn
             if (CurrentCD > 0)
                 CurrentCD -= Time.deltaTime;
         }
-        public void UseObject()
+        public void UseObject(Unit user)
         {
             CurrentCD = CoolDown;
+            user.UsingObject = UseTime;
+            user.Mood+=MoodDelta;
+            user.Fear+=FearDelta;
+            
+
         }
     }
 }

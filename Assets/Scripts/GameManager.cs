@@ -54,7 +54,7 @@ namespace ResidentJinn
             }
         }
 
-        private static void GameOver(bool Victory)
+        public static void GameOver(bool Victory)
         {
             GameActive = false;
 

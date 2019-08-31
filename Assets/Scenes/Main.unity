@@ -594,6 +594,9 @@ MonoBehaviour:
   Mood: 20
   Fear: 0
   MaxFear: 100
+  UsingObject: 0
+  CurrentObject: -1
+  Walking: 0
   destination: {x: 0, y: 0, z: 0}
   agent: {fileID: 0}
   audioSource: {fileID: 0}
@@ -5739,7 +5742,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CanUse: 01000000
   CoolDown: 30
-  UseTime: 30
+  UseTime: 20
+  CurrentCD: 0
   ConditionMoodMin: -50
   ConditionMoodMax: 100
   ConditionFearMin: 0
@@ -8259,6 +8263,9 @@ MonoBehaviour:
   Mood: 40
   Fear: 0
   MaxFear: 100
+  UsingObject: 0
+  CurrentObject: -1
+  Walking: 0
   destination: {x: 0, y: 0, z: 0}
   agent: {fileID: 0}
   audioSource: {fileID: 0}
@@ -8882,6 +8889,7 @@ MonoBehaviour:
   CanUse: 01000000
   CoolDown: 30
   UseTime: 5
+  CurrentCD: 0
   ConditionMoodMin: -75
   ConditionMoodMax: 100
   ConditionFearMin: 0
@@ -11142,6 +11150,9 @@ MonoBehaviour:
   Mood: 0
   Fear: 0
   MaxFear: 100
+  UsingObject: 0
+  CurrentObject: -1
+  Walking: 0
   destination: {x: 0, y: 0, z: 0}
   agent: {fileID: 0}
   audioSource: {fileID: 0}
@@ -12647,6 +12658,7 @@ MonoBehaviour:
   CanUse: 01000000
   CoolDown: 30
   UseTime: 5
+  CurrentCD: 0
   ConditionMoodMin: -75
   ConditionMoodMax: 100
   ConditionFearMin: 0
