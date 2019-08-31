@@ -1,27 +1,62 @@
 fileFormatVersion: 2
 guid: 661cb1c9ddb722043a13fb3fcfe0ebc2
-timeCreated: 18446744011573954816
 ModelImporter:
-  serializedVersion: 22
-  fileIDToRecycleName:
-    100000: base
-    100002: door
-    100004: handle
-    100006: //RootNode
-    400000: base
-    400002: door
-    400004: handle
-    400006: //RootNode
-    2300000: base
-    2300002: door
-    2300004: handle
-    3300000: base
-    3300002: door
-    3300004: handle
-    4300000: handle
-    4300002: door
-    4300004: base
-    9500000: //RootNode
+  serializedVersion: 26
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: base
+  - first:
+      1: 100002
+    second: door
+  - first:
+      1: 100004
+    second: handle
+  - first:
+      1: 100006
+    second: //RootNode
+  - first:
+      4: 400000
+    second: base
+  - first:
+      4: 400002
+    second: door
+  - first:
+      4: 400004
+    second: handle
+  - first:
+      4: 400006
+    second: //RootNode
+  - first:
+      23: 2300000
+    second: base
+  - first:
+      23: 2300002
+    second: door
+  - first:
+      23: 2300004
+    second: handle
+  - first:
+      33: 3300000
+    second: base
+  - first:
+      33: 3300002
+    second: door
+  - first:
+      33: 3300004
+    second: handle
+  - first:
+      43: 4300000
+    second: handle
+  - first:
+      43: 4300002
+    second: door
+  - first:
+      43: 4300004
+    second: base
+  - first:
+      95: 9500000
+    second: //RootNode
   externalObjects:
   - first:
       type: UnityEngine:Material
@@ -46,6 +81,7 @@ ModelImporter:
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
+    importConstraints: 0
     animationCompression: 1
     animationRotationError: 0.5
     animationPositionError: 0.5
@@ -60,6 +96,8 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
     importVisibility: 0
     importBlendShapes: 1
     importCameras: 0
@@ -67,9 +105,14 @@ ModelImporter:
     swapUVChannels: 0
     generateSecondaryUV: 1
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
+    indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
@@ -80,10 +123,14 @@ ModelImporter:
     normalImportMode: 0
     tangentImportMode: 4
     normalCalculationMode: 0
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 0
   copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -93,8 +140,8 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
-    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 0

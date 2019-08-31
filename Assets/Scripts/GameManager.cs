@@ -15,13 +15,19 @@ namespace ResidentJinn
         private static Camera MainCam;
         public static Unit Jinn, Man, Wolf;
         private static float TimeLeft = 300;
+        public static List<HouseObject> HouseObjects;
         // Start is called before the first frame update
-        public static void Init(Camera mainCam, Unit jinn, Unit man, Unit wolf)
+        public static void Init(Camera mainCam, Unit jinn, Unit man, Unit wolf, Transform ObjectsParent)
         {
             MainCam = mainCam;
             Jinn = jinn;
             Man = man;
             Wolf = wolf;
+
+            //objects
+            HouseObjects = new List<HouseObject>();
+            for (int i = 0; i < ObjectsParent.childCount; i++)
+                HouseObjects.Add(ObjectsParent.GetChild(i).GetComponent<HouseObject>());
         }
 
         private static RaycastHit mouseHit;

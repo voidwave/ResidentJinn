@@ -22,11 +22,16 @@ namespace ResidentJinn
         [HideInInspector] public NavMeshAgent agent;
         [HideInInspector] public AudioSource audioSource;
         [HideInInspector] public BoxCollider collider;
+        [HideInInspector] public CharacterController controller;
         void Start()
         {
             agent = GetComponent<NavMeshAgent>();
             audioSource = GetComponent<AudioSource>();
-            collider = GetComponent<BoxCollider>();
+
+            if (type == UnitType.Jinn)
+                controller = GetComponent<CharacterController>();
+            else
+                collider = GetComponent<BoxCollider>();
 
         }
 
@@ -64,7 +69,10 @@ namespace ResidentJinn
         {
             if (Vector3.Distance(transform.localPosition, destination) > 0.25f)
             {
-                transform.localPosition = Vector3.Lerp(transform.localPosition, destination, Time.deltaTime * CurrentSpeed);
+                Vector3 dir = destination - transform.localPosition;
+                dir.y = 0;
+                controller.Move(dir.normalized * Time.deltaTime * CurrentSpeed);
+                //transform.localPosition = Vector3.Lerp(transform.localPosition, destination, Time.deltaTime * CurrentSpeed);
             }
         }
     }

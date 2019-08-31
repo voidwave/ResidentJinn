@@ -7,10 +7,11 @@ namespace ResidentJinn
     public class Boot : MonoBehaviour
     {
         public Unit Jinn, Man, Wolf;
+        public Transform ObjectsParent;
 
         void Start()
         {
-            GameManager.Init(GetComponent<Camera>(), Jinn, Man, Wolf);
+            GameManager.Init(GetComponent<Camera>(), Jinn, Man, Wolf, ObjectsParent);
         }
 
         void Update()
