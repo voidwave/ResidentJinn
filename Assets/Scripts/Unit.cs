@@ -33,11 +33,14 @@ namespace ResidentJinn
         [HideInInspector] public BoxCollider collider;
         [HideInInspector] public CharacterController controller;
         [HideInInspector] public ParticleSystem particle;
+        [HideInInspector] public Animator anim;
+
         private Vector3 InitialPosition;
         void Start()
         {
             InitialPosition = transform.localPosition;
             agent = GetComponent<NavMeshAgent>();
+            anim = GetComponentInChildren<Animator>();
             audioSource = GetComponent<AudioSource>();
             particle = GetComponent<ParticleSystem>();
             if (type == UnitType.Jinn)
@@ -139,11 +142,13 @@ namespace ResidentJinn
 
             if (Stunned > 0)
             {
+                anim.SetFloat("Stunned", 1);
                 agent.isStopped = true;
                 return;
             }
             else
             {
+                anim.SetFloat("Stunned", 0);
                 agent.isStopped = false;
             }
 
@@ -208,7 +213,14 @@ namespace ResidentJinn
                 Mood = -100;
 
             if (ScaredTimer > 0)
+            {
+                anim.SetFloat("Fear", 1);
                 ScaredTimer -= Time.deltaTime;// / (Fear + 1);
+            }
+            else
+            {
+                anim.SetFloat("Fear", 0);
+            }
         }
 
         private void JinnUpdate()
@@ -231,21 +243,41 @@ namespace ResidentJinn
 
             if (Stunned > 0)
             {
+                //Animation JinnStunned
+                if (Boot.UseAnimations)
+                {
+                    anim.SetFloat("Stunned", 1);
+                }
                 Stunned -= Time.deltaTime;
                 return;
             }
 
             if (Vector3.Distance(transform.localPosition, destination) > 0.25f)
             {
+                //Animation JinnWalk
+                if (Boot.UseAnimations)
+                {
+                    anim.SetFloat("Walk", 1);
+                }
                 Vector3 dir = destination - transform.localPosition;
                 dir.y = 0;
                 controller.Move(dir.normalized * Time.unscaledDeltaTime * CurrentSpeed);
                 //transform.localPosition = Vector3.Lerp(transform.localPosition, destination, Time.deltaTime * CurrentSpeed);
             }
+            else
+            {
+                anim.SetFloat("Walk", 0);
+            }
         }
 
         public void Scared(float FearAmount, Vector3 Position)
         {
+            //Animation HumanAfraid
+            if (Boot.UseAnimations)
+            {
+                anim.SetFloat("Fear", 1);
+            }
+
             Fear += FearAmount;
             Mood -= 25;
             //Sin -= 5;
@@ -275,7 +307,6 @@ namespace ResidentJinn
 
             if (type == UnitType.Jinn)
             {
-
                 for (int i = 0; i < AbilityCurrentCD.Length; i++)
                     if (AbilityCurrentCD[i] > 0)
                         AbilityCurrentCD[i] = 0;
