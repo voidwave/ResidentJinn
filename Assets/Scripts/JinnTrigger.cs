@@ -31,8 +31,8 @@ namespace ResidentJinn
             {
                 Debug.Log("PowerUp");
                 GameManager.Jinn.Power += Boot.JinnDimension ? Time.deltaTime * 0.5f : Time.deltaTime;
-                if (GameManager.Jinn.Power > 100)
-                    GameManager.Jinn.Power = 100;
+                if (GameManager.Jinn.Power > 25)
+                    GameManager.Jinn.Power = 25;
                 ParticleManager.Emit(transform.position, ParticleType.ShadowPower);
             }
 

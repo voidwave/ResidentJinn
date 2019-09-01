@@ -66,17 +66,16 @@ namespace ResidentJinn
                         Jinn.destination = new Vector3(mouseHit.point.x, Jinn.transform.localPosition.y, mouseHit.point.z);
             }
 
-            if (Input.GetKeyDown(KeyCode.Alpha1))
+            if (Input.GetKeyDown(KeyCode.F) || Vector3.Distance(Jinn.transform.localPosition, Man.transform.localPosition) < 7)
                 TriggerJinnAbility(0);
-            if (Input.GetKeyDown(KeyCode.Alpha2))
-                TriggerJinnAbility(1);
-            if (Input.GetKeyDown(KeyCode.Alpha3))
-                TriggerJinnAbility(2);
-            if (Input.GetKeyDown(KeyCode.Alpha4))
-                TriggerJinnAbility(3);
-
-            if (Input.GetKeyDown(KeyCode.Alpha4))
-                TriggerJinnAbility(3);
+            // if (Input.GetKeyDown(KeyCode.Alpha2))
+            //     TriggerJinnAbility(1);
+            // if (Input.GetKeyDown(KeyCode.Alpha3))
+            //     TriggerJinnAbility(2);
+            // if (Input.GetKeyDown(KeyCode.Alpha4))
+            //     TriggerJinnAbility(3);
+            // if (Input.GetKeyDown(KeyCode.Alpha4))
+            //     TriggerJinnAbility(3);
 
             if (Input.GetKeyDown(KeyCode.Space))
                 ToggleDimension();
@@ -127,8 +126,8 @@ namespace ResidentJinn
                 Status.text = FearText + Man.Fear.ToString("0.0") + "%\n" +
                               SinText + Man.Sin.ToString("0.0") + "%\n" +
                               MoodText + mood + "\n" +
-                              JinnPowerText + Jinn.Power.ToString("0.0") + "%\n" +
-                              WolfMoodText + Wolf.Mood.ToString("0.0") + "%";
+                              JinnPowerText + Jinn.Power.ToString("0.0") + "%\n";// +
+                                                                                 //WolfMoodText + Wolf.Mood.ToString("0.0") + "%";
 
                 currentUIUpdateTimer = 1 / updateTimerRate;
             }
@@ -262,7 +261,7 @@ namespace ResidentJinn
         public void RestartGame()
         {
 
-            GameManager.TimeLeft = 240;
+            GameManager.TimeLeft = 75;
             Time.timeScale = 1;
             WinLoseUI.SetActive(false);
             StartedGame = true;

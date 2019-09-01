@@ -18,7 +18,7 @@ namespace ResidentJinn
         public static Image FearImage;
         public static Text WinLoseText;
         public static GameObject WinLoseUI;
-        public static float TimeLeft = 240;
+        public static float TimeLeft = 75;
         public static float TimeScale = 1;
         public static List<HouseObject> HouseObjects;
         public static PostProcessVolume postProcess;

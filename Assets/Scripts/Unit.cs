@@ -106,11 +106,11 @@ namespace ResidentJinn
                     //TakeDamage
                     ParticleManager.Emit(GameManager.Jinn.transform.localPosition, ParticleType.TakeDamage);
                     if (Vector3.Distance(transform.localPosition, GameManager.Jinn.transform.localPosition) < 2)
-                        GameManager.Jinn.Power -= 25;
+                        GameManager.Jinn.Power -= 15;
 
                     if (GameManager.Jinn.Power < 0)
                         GameManager.GameOver(false, 1);
-                    BiteCoolDown = 1;
+                    BiteCoolDown = 2;
                 }
                 UsingObject = 5;
             }
@@ -156,7 +156,7 @@ namespace ResidentJinn
             {
                 UsingObject = 0;
                 CurrentObject = -1;
-                NavGoto(transform.localPosition - scarePosition * 3);
+                NavGoto(Vector3.Normalize(transform.localPosition - scarePosition) * 10);
                 return;
             }
             if (UsingObject > 0)
@@ -234,8 +234,8 @@ namespace ResidentJinn
                 Power += Time.deltaTime * 0.1f;
             if (Power < 0)
                 Power = 0;
-            if (Power > 100)
-                Power = 100;
+            if (Power > 25)
+                Power = 25;
 
             for (int i = 0; i < AbilityCurrentCD.Length; i++)
                 if (AbilityCurrentCD[i] > 0)
