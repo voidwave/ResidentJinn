@@ -1,0 +1,62 @@
+Game Description:
+
+You Are a Jinn that wants to scare a Human out of YOUR Home!
+How to win?
+Get the human's fear meter to reach 100%
+and don't die to the wolf!
+
+بسم الله الرحمن الرحيم
+أنت تلعب دور جني يريد ان يخوف انسان من منزله!
+كيف تفوز؟
+اجعل عداد خوف الانسان يصل الى 100%
+ولا يأكلك الذئب!
+
+////////
+
+Ability0Title:
+Scare!
+خوٍّف
+
+Ability0Desc:
+Scare the Human, depends on distance to Human.
++Increases Human Fear
+خوٍّف الانسان . يعتمد على قربك للانسان
++يزيد خوف الانسان
+
+////////
+
+Ability1Title:
+Distract?
+حيّر
+
+Ability1Desc:
+Distract The Human or The Wolf with ShadowFire.
+-Decreases Human Mood
+حيّر الانسان او الذئب بنارالظل
+-ينقص مزاج الانسان 
+
+////////
+
+Ability2Title:
+Tempt
+وسوس
+
+Ability2Desc:
+Tempt The Human, if his Sin Meter is +25%
++Increases Human Sin
+وسوس للانسان, اذا عداد الذنب +25%
++يزيد ذنوب الانسان
+
+////////
+
+Ability3Title:
+Possess
+اسحر
+
+Ability3Desc:
+Gain Control of The Human for 30 seconds, if his Sin and Fear Meters are +50%
++Increases Human Fear
+-Decreases Human Mood
+اسحر الانسان وسيطر عليه لمدة 30 ثانيه, اذا عداد الخوف و الذنب +50
++يزيد خوف الانسان
+-ينقص مزاج الانسان

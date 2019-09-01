@@ -23,6 +23,9 @@ namespace ResidentJinn
         // Update is called once per frame
         void Update()
         {
+            if (!GameManager.GameActive)
+                return;
+
             if (CurrentCD > 0)
                 CurrentCD -= Time.deltaTime;
         }
@@ -30,9 +33,18 @@ namespace ResidentJinn
         {
             CurrentCD = CoolDown;
             user.UsingObject = UseTime;
-            user.Mood+=MoodDelta;
-            user.Fear+=FearDelta;
-            
+            user.Mood += MoodDelta;
+            user.Fear += FearDelta;
+
+            if (user.Mood > 100)
+                user.Mood = 100;
+            if (user.Mood < -100)
+                user.Mood = -100;
+
+            if (user.Fear > 100)
+                user.Fear = 100;
+            if (user.Fear < 0)
+                user.Fear = 0;
 
         }
     }
