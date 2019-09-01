@@ -5,6 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - Building
+  - RoomCollider
+  - BathRoomEntrance
+  - Unit
+  - PowerUp
   layers:
   - Default
   - TransparentFX

@@ -9,7 +9,7 @@ public class LanguageSwitcher : MonoBehaviour
     Abilitiy0Title, Abilitiy1Title, Abilitiy2Title, Abilitiy3Title,
     Abilitiy0Desc, Abilitiy1Desc, Abilitiy2Desc, Abilitiy3Desc;
 
-    void Start()
+    public void Initilize()
     {
 
         GameDescription = new string[2];
@@ -47,7 +47,7 @@ public class LanguageSwitcher : MonoBehaviour
         Abilitiy2Desc[1] = "Tempt The Human, if his Sin Meter is +25% \n +Increases Human Sin";
 
         Abilitiy3Desc = new string[2];
-        Abilitiy3Desc[0] = "+%50 ﺐﻧﺬﻟﺍ و فﻮﺨﻟﺍ دﺍﺪﻋ اﺫﺍ ,ﻪﻴﻧﺎﺛ 03 ةﺪﻤﻟ ﻪﻴﻠﻋ ﺮﻄﻴﺳﻭ نﺎﺴﻧﻻﺍ ﺮﺤﺳﺍ \nنﺎﺴﻧﻻﺍ فﻮﺧ ﺪﻳﺰﻳ+\nنﺎﺴﻧﻻﺍ جﺍﺰﻣ ﺺﻘﻨﻳ-";
+        Abilitiy3Desc[0] = "+%50 ﺐﻧﺬﻟﺍ و فﻮﺨﻟﺍ دﺍﺪﻋ اﺫﺍ ,ﻪﻴﻧﺎﺛ 30 ةﺪﻤﻟ ﻪﻴﻠﻋ ﺮﻄﻴﺳﻭ نﺎﺴﻧﻻﺍ ﺮﺤﺳﺍ \nنﺎﺴﻧﻻﺍ فﻮﺧ ﺪﻳﺰﻳ+\nنﺎﺴﻧﻻﺍ جﺍﺰﻣ ﺺﻘﻨﻳ-";
         Abilitiy3Desc[1] = "Gain Control of The Human for 30 seconds, if his Sin and Fear Meters are +50%\n+Increases Human Fear\n-Decreases Human Mood";
     }
 

@@ -21,16 +21,23 @@ namespace ResidentJinn
         [Range(0, 100)]
         public float Fear, MaxFear;
         public float UsingObject = 0;
-        public int CurrentObject = -1;
+        public int CurrentObject, LastObjectUsed = -1;
         public bool Walking = false;
-        public Vector3 destination;
+        public float Stunned = 0;
+
+
+        public float[] AbilityCurrentCD = { 0, 0, 0, 0 };
+        public float[] AbilityCoolDown = { 10, 10, 15, 25 };
+        public Vector3 destination, scarePosition;
         [HideInInspector] public NavMeshAgent agent;
         [HideInInspector] public AudioSource audioSource;
         [HideInInspector] public BoxCollider collider;
         [HideInInspector] public CharacterController controller;
         [HideInInspector] public ParticleSystem particle;
+        private Vector3 InitialPosition;
         void Start()
         {
+            InitialPosition = transform.localPosition;
             agent = GetComponent<NavMeshAgent>();
             audioSource = GetComponent<AudioSource>();
             particle = GetComponent<ParticleSystem>();
@@ -79,11 +86,26 @@ namespace ResidentJinn
                 return;
             }
 
-            if (ScaredTimer > 0)
-                ScaredTimer -= Time.deltaTime / (Fear + 1);
-
             //Stats Update
             StatsUpdate();
+
+            if (Stunned > 0)
+            {
+                agent.isStopped = true;
+                return;
+            }
+            else
+            {
+                agent.isStopped = false;
+            }
+
+            if (ScaredTimer > 0)
+            {
+                UsingObject = 0;
+                CurrentObject = -1;
+                NavGoto(transform.localPosition - scarePosition * 3);
+                return;
+            }
             if (UsingObject > 0)
             {
                 UsingObject -= Time.deltaTime;
@@ -98,10 +120,11 @@ namespace ResidentJinn
                 for (int i = 0; i < GameManager.HouseObjects.Count; i++)
                     for (int j = 0; j < GameManager.HouseObjects[i].CanUse.Count; j++)
                         if (GameManager.HouseObjects[i].CanUse[j] == UnitType.Man)
-                            if (GameManager.HouseObjects[i].CurrentCD <= 0)
-                                if (GameManager.HouseObjects[i].ConditionFearMax >= Fear && GameManager.HouseObjects[i].ConditionFearMin <= Fear
-                                   && GameManager.HouseObjects[i].ConditionMoodMax >= Mood && GameManager.HouseObjects[i].ConditionMoodMin <= Mood)
-                                    possibilities.Add(i);
+                            if (i != LastObjectUsed)
+                                if (GameManager.HouseObjects[i].CurrentCD <= 0)
+                                    if (GameManager.HouseObjects[i].ConditionFearMax >= Fear && GameManager.HouseObjects[i].ConditionFearMin <= Fear
+                                       && GameManager.HouseObjects[i].ConditionMoodMax >= Mood && GameManager.HouseObjects[i].ConditionMoodMin <= Mood)
+                                        possibilities.Add(i);
 
 
                 //pick something random to do
@@ -117,6 +140,7 @@ namespace ResidentJinn
             {
                 destination = transform.localPosition;
                 GameManager.HouseObjects[CurrentObject].UseObject(this);
+                LastObjectUsed = CurrentObject;
                 CurrentObject = -1;
                 Walking = false;
             }
@@ -125,16 +149,32 @@ namespace ResidentJinn
 
         private void StatsUpdate()
         {
+            Stunned -= Time.deltaTime;
             Fear -= Time.deltaTime * 0.1f;
             Mood -= Time.deltaTime * 0.5f;
+            if (Stunned < 0)
+                Stunned = 0;
             if (Fear < 0)
                 Fear = 0;
             if (Mood < -100)
                 Mood = -100;
+
+            if (ScaredTimer > 0)
+                ScaredTimer -= Time.deltaTime;// / (Fear + 1);
         }
 
         private void JinnUpdate()
         {
+            for (int i = 0; i < AbilityCurrentCD.Length; i++)
+                if (AbilityCurrentCD[i] > 0)
+                    AbilityCurrentCD[i] -= Time.deltaTime;
+
+            if (Stunned > 0)
+            {
+                Stunned -= Time.deltaTime;
+                return;
+            }
+
             if (Vector3.Distance(transform.localPosition, destination) > 0.25f)
             {
                 Vector3 dir = destination - transform.localPosition;
@@ -144,6 +184,45 @@ namespace ResidentJinn
             }
         }
 
+        public void Scared(float FearAmount, Vector3 Position)
+        {
+            Fear += FearAmount;
+            Mood -= 25;
+            //Sin -= 5;
+            ScaredTimer += FearAmount;
+            if (ScaredTimer > 10)
+                ScaredTimer = 10;
+            scarePosition = Position;
+        }
+
+        public void ResetValues()
+        {
+            audioSource.Stop();
+            transform.localPosition = InitialPosition;
+            agent.nextPosition = InitialPosition;
+            Walking = false;
+            Stunned = 0.1f;
+            CurrentObject = -1;
+            LastObjectUsed = -1;
+            Fear = 0;
+            Mood = 20;
+            Sin = 10;
+            ScaredTimer = 0;
+            Power = 10;
+            UsingObject = 0;
+
+            if (type == UnitType.Jinn)
+            {
+                for (int i = 0; i < AbilityCurrentCD.Length; i++)
+                    if (AbilityCurrentCD[i] > 0)
+                        AbilityCurrentCD[i] = 0;
+            }
+            else
+            {
+                agent.isStopped = false;
+            }
+
+        }
 
     }
 

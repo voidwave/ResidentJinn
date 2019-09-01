@@ -4,21 +4,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
+
 
 namespace ResidentJinn
 {
     public static class GameManager
     {
         public static bool GameActive = false;
-        private static Camera MainCam;
+        public static Camera MainCam;
         public static Unit Jinn, Man, Wolf;
         public static Image FearImage;
+        public static Text WinLoseText;
+        public static GameObject WinLoseUI;
         public static float TimeLeft = 300;
         public static List<HouseObject> HouseObjects;
         // Start is called before the first frame update
-        public static void Init(Camera mainCam, Unit jinn, Unit man, Unit wolf, Transform ObjectsParent, Image fearImage)
+        public static void Init(Camera mainCam, Unit jinn, Unit man, Unit wolf, Transform ObjectsParent, Image fearImage, Text winLoseText, GameObject winLoseUI)
         {
+            WinLoseUI = winLoseUI;
+            WinLoseText = winLoseText;
             MainCam = mainCam;
             Jinn = jinn;
             Man = man;
@@ -30,7 +34,7 @@ namespace ResidentJinn
                 HouseObjects.Add(ObjectsParent.GetChild(i).GetComponent<HouseObject>());
         }
 
-        private static RaycastHit mouseHit;
+
         public static void Update()
         {
             if (!GameActive)
@@ -41,32 +45,25 @@ namespace ResidentJinn
 
             TimeLeft -= Time.deltaTime;
 
-            JinnInput();
+
         }
 
-        private static void JinnInput()
-        {
-            if (Input.GetMouseButton(0))
-            {
-                if (EventSystem.current.currentSelectedGameObject == null)
-                    if (Physics.Raycast(MainCam.ScreenPointToRay(Input.mousePosition), out mouseHit, 100))
-                        Jinn.destination = new Vector3(mouseHit.point.x, Jinn.transform.localPosition.y, mouseHit.point.z);
-            }
-        }
 
         public static void GameOver(bool Victory)
         {
             GameActive = false;
-
+            WinLoseUI.SetActive(true);
             if (Victory)
             {
                 //Win screen
                 Debug.Log("You Win");
+                WinLoseText.text = Boot.language == 0 ? "ﺖﺤﺠﻧ" : "You Won";
             }
             else
             {
                 //Lose screen
                 Debug.Log("You Lose");
+                WinLoseText.text = Boot.language == 0 ? "ﺖﻠﺸﻓ" : "You Failed";
             }
         }
 

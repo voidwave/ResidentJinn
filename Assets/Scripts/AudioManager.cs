@@ -15,16 +15,19 @@ namespace ResidentJinn
         public static Transform AudioSourcesParent;
         public static AudioMixer Audio;
         //public static AudioSource MusicSource, EventSource;
-        public static void Initilaize(Transform AudioParent)
+        public static void Initilaize(Transform AudioParent, AudioMixer audio)
         {
-
+            Audio = audio;
             AudioSourcesParent = AudioParent;
             audioSources = new List<AudioSource>();
             for (int i = 0; i < AudioSourcesParent.childCount; i++)
                 audioSources.Add(AudioSourcesParent.GetChild(i).GetComponent<AudioSource>());
 
-            // audioClips = new List<AudioClip>();
-            // audioClips.Add((AudioClip)Resources.Load("Audio/Event"));
+            audioClips = new List<AudioClip>();
+            audioClips.Add((AudioClip)Resources.Load("Audio/Quran"));
+            audioClips.Add((AudioClip)Resources.Load("Audio/EnterDua"));
+            audioClips.Add((AudioClip)Resources.Load("Audio/ExitDua"));
+            audioClips.Add((AudioClip)Resources.Load("Audio/RealityTV"));
             // audioClips.Add((AudioClip)Resources.Load("Audio/Connected"));
             // audioClips.Add((AudioClip)Resources.Load("Audio/Disconnected"));
             // audioClips.Add((AudioClip)Resources.Load("Audio/Hit0"));
@@ -42,6 +45,9 @@ namespace ResidentJinn
 
         public static void Play(Vector3 position, AudioClipName audioClipName, float volume = 0.5f)
         {
+            if (!PlayAudio)
+                return;
+
             for (int i = 0; i < audioSources.Count; i++)
                 if (!audioSources[i].isPlaying)
                 {
@@ -55,25 +61,35 @@ namespace ResidentJinn
 
         public static void Volume(float value)
         {
-            Audio.SetFloat("Vol", value);
+            Audio.SetFloat("Volume", value);
             //MusicSource = value;
         }
 
-        static private bool mute = false;
+        static private bool PlayAudio = true;
 
-        public static void Mute()
+        public static void Mute(bool mute)
         {
-            mute = !mute;
+            PlayAudio = !mute;
             if (mute)
-                Audio.SetFloat("Vol", -88);
+                Audio.SetFloat("Volume", -88);
             else
-                Audio.SetFloat("Vol", 0);
+                Audio.SetFloat("Volume", 0);
+
+            for (int i = 0; i < audioSources.Count; i++)
+                audioSources[i].mute = mute;
+
+            GameManager.Jinn.audioSource.mute = mute;
+            GameManager.Wolf.audioSource.mute = mute;
+            GameManager.Man.audioSource.mute = mute;
         }
     }
 
     public enum AudioClipName
     {
         Quran,
+        EnterDua,
+        ExitDua,
+        Reality,
         JinnScare,
         JinnHurt,
         JinnLaugh,
