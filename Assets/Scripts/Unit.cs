@@ -19,12 +19,11 @@ namespace ResidentJinn
         [Range(-100, 100)]
         public float Mood;
         [Range(0, 100)]
-        public float Fear, MaxFear;
+        public float Fear;
         public float UsingObject = 0;
         public int CurrentObject, LastObjectUsed = -1;
         public bool Walking = false;
         public float Stunned = 0;
-
 
         public float[] AbilityCurrentCD = { 0, 0, 0, 0 };
         public float[] AbilityCoolDown = { 10, 10, 15, 25 };
@@ -64,25 +63,74 @@ namespace ResidentJinn
             else
                 WolfUpdate();
         }
-        public void NavGoto(Vector3 Pos)
+        public void NavGoto(Vector3 Pos, float stoppingDistance = 1)
         {
             Pos.y = transform.localPosition.y;
             destination = Pos;
+            agent.stoppingDistance = stoppingDistance;
             agent.SetDestination(Pos);
         }
+        private float BiteCoolDown = 1;
         private void WolfUpdate()
         {
-            //NavGoto(GameManager.Jinn.transform.localPosition);
+            if (UsingObject > 0)
+                UsingObject -= Time.deltaTime;
+            if (BiteCoolDown > 0)
+                BiteCoolDown -= Time.deltaTime;
+            if (Stunned > 0)
+            {
+                Stunned -= Time.deltaTime;
+                return;
+            }
+            //Can See
+            if (!Boot.JinnDimension)
+            {
+                float distance = Vector3.Distance(GameManager.Jinn.transform.localPosition, transform.localPosition);
+                //Chase
+                if (distance < 20)
+                    NavGoto(GameManager.Jinn.transform.localPosition, 1);
+                else
+                {
+                    if (UsingObject > 0)
+                        return;
+
+                    if (destination != GameManager.Man.transform.localPosition)
+                        NavGoto(GameManager.Man.transform.localPosition, 8);
+                }
+                //Bite
+                if (distance < 2 && BiteCoolDown <= 0)
+                {
+                    //TakeDamage
+                    ParticleManager.Emit(GameManager.Jinn.transform.localPosition, ParticleType.TakeDamage);
+                    if (Vector3.Distance(transform.localPosition, GameManager.Jinn.transform.localPosition) < 2)
+                        GameManager.Jinn.Power -= 25;
+
+                    if (GameManager.Jinn.Power < 0)
+                        GameManager.GameOver(false, 1);
+                    BiteCoolDown = 1;
+                }
+                UsingObject = 5;
+            }
+            else
+            {
+                if (UsingObject > 0)
+                    return;
+
+                if (destination != GameManager.Man.transform.localPosition)
+                    NavGoto(GameManager.Man.transform.localPosition, 8);
+
+            }
+
         }
 
         private void ManUpdate()
         {
             //NavGoto(GameManager.Jinn.transform.localPosition);
-            GameManager.FearImage.fillAmount = Fear / MaxFear;
+            GameManager.FearImage.fillAmount = Fear / 100;
             //Jinn Wins
-            if (Fear >= MaxFear)
+            if (Fear >= 100)
             {
-                GameManager.GameOver(true);
+                GameManager.GameOver(true, 0);
                 return;
             }
 
@@ -165,6 +213,18 @@ namespace ResidentJinn
 
         private void JinnUpdate()
         {
+            if (Power <= 0)
+                GameManager.GameOver(false, 2);
+
+            if (Boot.JinnDimension)
+                Power -= Time.deltaTime;
+            else
+                Power += Time.deltaTime * 0.1f;
+            if (Power < 0)
+                Power = 0;
+            if (Power > 100)
+                Power = 100;
+
             for (int i = 0; i < AbilityCurrentCD.Length; i++)
                 if (AbilityCurrentCD[i] > 0)
                     AbilityCurrentCD[i] -= Time.deltaTime;
@@ -179,7 +239,7 @@ namespace ResidentJinn
             {
                 Vector3 dir = destination - transform.localPosition;
                 dir.y = 0;
-                controller.Move(dir.normalized * Time.deltaTime * CurrentSpeed);
+                controller.Move(dir.normalized * Time.unscaledDeltaTime * CurrentSpeed);
                 //transform.localPosition = Vector3.Lerp(transform.localPosition, destination, Time.deltaTime * CurrentSpeed);
             }
         }
@@ -197,11 +257,12 @@ namespace ResidentJinn
 
         public void ResetValues()
         {
+
             audioSource.Stop();
             transform.localPosition = InitialPosition;
             agent.nextPosition = InitialPosition;
             Walking = false;
-            Stunned = 0.1f;
+
             CurrentObject = -1;
             LastObjectUsed = -1;
             Fear = 0;
@@ -210,15 +271,20 @@ namespace ResidentJinn
             ScaredTimer = 0;
             Power = 10;
             UsingObject = 0;
+            destination = InitialPosition;
 
             if (type == UnitType.Jinn)
             {
+
                 for (int i = 0; i < AbilityCurrentCD.Length; i++)
                     if (AbilityCurrentCD[i] > 0)
                         AbilityCurrentCD[i] = 0;
             }
             else
             {
+                Stunned = 1f;
+
+                agent.Warp(InitialPosition);
                 agent.isStopped = false;
             }
 

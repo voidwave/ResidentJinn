@@ -28,24 +28,24 @@ namespace ResidentJinn
                 //Human Entering Bathroom
                 if (unit.CurrentObject == (int)ObjectType.Toilet)
                 {
-                    unit.Sin -= 5;
-                    if (unit.Sin < 0)
-                        unit.Sin = 0;
+                    // unit.Sin -= 2;
+                    // if (unit.Sin < 0)
+                    //     unit.Sin = 0;
 
                     unit.Stunned = 4;
-                    AudioManager.Play(transform.position, AudioClipName.EnterDua);
+                    AudioManager.Play(transform.position, AudioClipName.EnterDua, 1);
                     GameManager.HouseObjects[(int)ObjectType.Toilet].roomColliderTimer.CurrentCD = GameManager.HouseObjects[(int)ObjectType.Toilet].roomColliderTimer.CoolDown;
                     GameManager.HouseObjects[(int)ObjectType.Toilet].roomColliderTimer.gameObject.SetActive(true);
                 }
                 //Human Exiting Bathroom
                 else if (unit.ScaredTimer <= 0)
                 {
-                    unit.Sin -= 5;
-                    if (unit.Sin < 0)
-                        unit.Sin = 0;
+                    // unit.Sin -= 1;
+                    // if (unit.Sin < 0)
+                    //     unit.Sin = 0;
 
-                    unit.Stunned = 1;
-                    AudioManager.Play(transform.position, AudioClipName.ExitDua);
+                    unit.Stunned = 2;
+                    AudioManager.Play(transform.position, AudioClipName.ExitDua, 1);
 
                 }
             }

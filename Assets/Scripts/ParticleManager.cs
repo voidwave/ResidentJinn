@@ -33,5 +33,7 @@ namespace ResidentJinn
         ShadowBomb = 0,
         //to distract wolf
         ShadowFire = 1,
+        ShadowPower = 2,
+        TakeDamage = 3
     }
 }

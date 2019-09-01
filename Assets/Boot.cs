@@ -7,33 +7,36 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.Audio;
 
+
 namespace ResidentJinn
 {
     public class Boot : MonoBehaviour
     {
         public bool StartedGame = false;
+        public Camera MainCam;
         public static int language = (int)Language.Arabic;
         public Unit Jinn, Man, Wolf;
         public Transform ObjectsParent, ParticleParent, AudioParent;
         public Text Status, Timer,
         Ablility0Title, Ablility1Title, Ablility2Title, Ablility3Title,
         Ablility0Desc, Ablility1Desc, Ablility2Desc, Ablility3Desc,
-        GameDescription, SettingsText, WinLoseText, RestartGameText;
+        GameDescription, SettingsText, WinLoseText, RestartGameText, PowerText;
         private LanguageSwitcher switcher;
         public GameObject SettingsUI, WinLoseUI;
-        public Image FearImage;
+        public Image FearImage, PowerImage;
         public Image[] AbilityCDIcon;
         public AudioMixer audioMixer;
-
+        //public LayerMask JinnLayerMask;
         void Start()
         {
-
+            // Debug.Log(JinnLayerMask.value);
+            MainCam = GetComponent<Camera>();
             Application.targetFrameRate = 60;
             int minutes = (int)(GameManager.TimeLeft / 60);
             Timer.text = (language == (int)Language.Arabic ? "ﻲﻘﺒﺘﻣ ﻦﻣﺯ " : "Time Left ") + minutes + ":" + (GameManager.TimeLeft - minutes * 60).ToString("00");
             switcher = GetComponent<LanguageSwitcher>();
             switcher.Initilize();
-            GameManager.Init(GetComponent<Camera>(), Jinn, Man, Wolf, ObjectsParent, FearImage, WinLoseText, WinLoseUI);
+            GameManager.Init(MainCam, Jinn, Man, Wolf, ObjectsParent, FearImage, WinLoseText, WinLoseUI);
             ParticleManager.Initilaize(ParticleParent);
             AudioManager.Initilaize(AudioParent, audioMixer);
             ChangeLanguage(language);
@@ -52,6 +55,10 @@ namespace ResidentJinn
         {
             if (!GameManager.GameActive)
                 return;
+
+            if (DimensionCD > 0)
+                DimensionCD -= Time.deltaTime;
+
             if (Input.GetMouseButton(0))
             {
                 if (EventSystem.current.currentSelectedGameObject == null)
@@ -70,6 +77,9 @@ namespace ResidentJinn
 
             if (Input.GetKeyDown(KeyCode.Alpha4))
                 TriggerJinnAbility(3);
+
+            if (Input.GetKeyDown(KeyCode.Space))
+                ToggleDimension();
         }
 
         private float updateTimerRate = 5;
@@ -78,6 +88,17 @@ namespace ResidentJinn
         {
             if (!GameManager.GameActive)
                 return;
+
+            if (Jinn.Power < 10)
+            {
+                PowerText.text = JinnPowerText + Jinn.Power.ToString("0.0");
+                PowerImage.fillAmount = Jinn.Power / 10;
+            }
+            else
+            {
+                PowerText.text = "";
+                PowerImage.fillAmount = 0;
+            }
 
             currentUIUpdateTimer -= Time.deltaTime;
 
@@ -116,6 +137,26 @@ namespace ResidentJinn
 
         }
 
+        public static bool JinnDimension = false;
+        public static float DimensionCD = 1;
+        public void ToggleDimension()
+        {
+            if (DimensionCD > 0)
+                return;
+
+            JinnDimension = !JinnDimension;
+
+            if (JinnDimension)
+            {
+                AudioManager.Play(Jinn.transform.localPosition, AudioClipName.WarpOn);
+            }
+            else
+            {
+                AudioManager.Play(Jinn.transform.localPosition, AudioClipName.WarpOff);
+            }
+
+            DimensionCD = 1;
+        }
         public void TriggerJinnAbility(int index)
         {
             if (!GameManager.GameActive)
@@ -125,17 +166,22 @@ namespace ResidentJinn
 
             switch (index)
             {
+
                 case 0:
+                    if (Boot.JinnDimension)
+                        return;
                     //ability0
                     ParticleManager.Emit(Jinn.transform.localPosition, ParticleType.ShadowBomb);
                     if (Vector3.Distance(Jinn.transform.localPosition, Man.transform.localPosition) < 10)
                     {
                         Debug.Log("Scare Human");
                         Jinn.AbilityCurrentCD[0] = Jinn.AbilityCoolDown[0];
-                        Man.Scared(10, Jinn.transform.localPosition);
+                        Man.Scared(Jinn.Power, Jinn.transform.localPosition);
                     }
                     break;
                 case 1:
+                    if (Boot.JinnDimension)
+                        return;
                     //ability1
                     ParticleManager.Emit(Jinn.transform.localPosition, ParticleType.ShadowFire);
                     Jinn.AbilityCurrentCD[1] = Jinn.AbilityCoolDown[1];
@@ -210,8 +256,12 @@ namespace ResidentJinn
             ChangeLanguage(language);
         }
 
+        public ColliderTimer[] colliderTimers;
         public void RestartGame()
         {
+
+            GameManager.TimeLeft = 240;
+            Time.timeScale = 1;
             WinLoseUI.SetActive(false);
             StartedGame = true;
             GameManager.GameActive = true;
@@ -219,6 +269,20 @@ namespace ResidentJinn
             Man.ResetValues();
             Wolf.ResetValues();
             Jinn.ResetValues();
+
+            for (int i = 0; i < colliderTimers.Length; i++)
+            {
+                colliderTimers[i].CurrentCD = 0;
+            }
+            for (int i = 0; i < GameManager.HouseObjects.Count; i++)
+            {
+                GameManager.HouseObjects[i].CurrentCD = 0;
+            }
+            for (int i = 0; i < AudioManager.audioSources.Count; i++)
+            {
+                AudioManager.audioSources[i].Stop();
+            }
+
             ChangeLanguage(language);
         }
 

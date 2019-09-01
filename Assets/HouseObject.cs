@@ -47,7 +47,7 @@ namespace ResidentJinn
                     if (user.Sin < 45 && user.Fear > 25)
                     {
                         Debug.Log("Human turned on The Quran Channel");
-                        user.Sin -= 10;
+                        user.Sin -= 25;
                         if (user.Sin < 0)
                             user.Sin = 0;
 
@@ -58,7 +58,7 @@ namespace ResidentJinn
                     else
                     {
                         Debug.Log("Human turned on The RealityTV Channel");
-                        user.Sin += 10;
+                        user.Sin += 15;
                         if (user.Sin > 100)
                             user.Sin = 100;
 

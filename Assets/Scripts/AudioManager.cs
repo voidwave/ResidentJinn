@@ -28,6 +28,8 @@ namespace ResidentJinn
             audioClips.Add((AudioClip)Resources.Load("Audio/EnterDua"));
             audioClips.Add((AudioClip)Resources.Load("Audio/ExitDua"));
             audioClips.Add((AudioClip)Resources.Load("Audio/RealityTV"));
+            audioClips.Add((AudioClip)Resources.Load("Audio/WarpOn"));
+            audioClips.Add((AudioClip)Resources.Load("Audio/WarpOff"));
             // audioClips.Add((AudioClip)Resources.Load("Audio/Connected"));
             // audioClips.Add((AudioClip)Resources.Load("Audio/Disconnected"));
             // audioClips.Add((AudioClip)Resources.Load("Audio/Hit0"));
@@ -43,6 +45,15 @@ namespace ResidentJinn
 
         }
 
+        public static void Update()
+        {
+            for (int i = 0; i < audioSources.Count; i++)
+                if (audioSources[i].isPlaying && audioSources[i].clip != audioClips[0])
+                    audioSources[i].pitch = Time.timeScale;
+                else
+                    audioSources[i].pitch = 1;
+
+        }
         public static void Play(Vector3 position, AudioClipName audioClipName, float volume = 0.5f)
         {
             if (!PlayAudio)
@@ -90,6 +101,8 @@ namespace ResidentJinn
         EnterDua,
         ExitDua,
         Reality,
+        WarpOn,
+        WarpOff,
         JinnScare,
         JinnHurt,
         JinnLaugh,
