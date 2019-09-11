@@ -50,7 +50,8 @@ namespace ResidentJinn
                         user.Sin -= 25;
                         if (user.Sin < 0)
                             user.Sin = 0;
-
+                        for(int i=0;i<AudioManager.audioSources.Count;i++)
+                            AudioManager.audioSources[i].Stop();
                         AudioManager.Play(transform.localPosition, AudioClipName.Quran);
                         roomColliderTimer.CurrentCD = roomColliderTimer.CoolDown;
                         roomColliderTimer.gameObject.SetActive(true);

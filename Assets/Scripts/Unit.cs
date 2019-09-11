@@ -38,7 +38,9 @@ namespace ResidentJinn
         private Vector3 InitialPosition;
         void Start()
         {
+
             InitialPosition = transform.localPosition;
+            destination = InitialPosition;
             agent = GetComponent<NavMeshAgent>();
             anim = GetComponentInChildren<Animator>();
             audioSource = GetComponent<AudioSource>();

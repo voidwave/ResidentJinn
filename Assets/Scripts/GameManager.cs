@@ -65,7 +65,7 @@ namespace ResidentJinn
         }
 
         private static string[,] Reasons = {
-            { "نﺎﺴﻧﻻﺍ ﺖﻓﻮﺧ", "ﻚﻠﻛﺍ ﺐﺋﺬﻟﺍ", "ﻚﺗﻮﻗ ﺖﻬﺘﻧﺍ" , "ﺖﻗﻮﻟﺍ ﻰﻫﻰﺘﻧﺍ"},
+            { "نﺎﺴﻧﻻﺍ ﺖﻓﻮﺧ", "ﻚﻠﻛﺍ ﺐﺋﺬﻟﺍ", "ﻚﺗﻮﻗ ﺖﻬﺘﻧﺍ" , "ﺖﻗﻮﻟﺍ ﻰﻫﺘﻧﺍ"},
              { "You scared the Human!", "The Wolf ate You!", "You ran out of Power", "You ran out of Time" } };
         public static void GameOver(bool Victory, int reason)
         {
